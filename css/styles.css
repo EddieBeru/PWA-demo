@@ -1,0 +1,56 @@
+/* Simple and Minimalist PWA Stylesheet */
+body {
+  font-family: sans-serif;
+  background-color: #f4f4f9;
+  color: #333333;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 10px 0;
+  color: #000000;
+}
+
+p {
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 20px;
+}
+
+.btn-install {
+  display: none;
+  padding: 10px;
+  background-color: #0056b3;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 200px;
+}
+
+.btn-install:hover {
+  background-color: #004085;
+}

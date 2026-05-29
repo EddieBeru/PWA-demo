@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PacMan en PWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pacman.css">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.svg">
+</head>
+
+<body>
+    <button class="btn-install" id="installBtn">Instalar en el dispositivo</button>
+
+    <div class="container">
+        <h4>Juega PacMan incluso sin conexión a internet!</h4>
+
+        <div id="game-wrapper">
+            <div id="game-banner">
+                <span>SCORE</span>
+                <span id="game-score">0</span>
+            </div>
+            <canvas style="image-rendering: pixelated; image-rendering: crisp-edges;" id="game-canvas"
+                class="blurred"></canvas>
+
+            <div id="game-overlay">
+                <h2 id="overlay-title">READY?</h2>
+                <button id="play-button">START</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+    <script is:inline src="game/bundle.js"></script>
+</body>
+
+</html>

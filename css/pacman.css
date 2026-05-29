@@ -1,0 +1,125 @@
+.container {
+    font-family: "Press Start 2P", monospace !important;
+}
+
+#game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    background: #111;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8),
+        0 0 25px rgba(0, 80, 255, 0.3);
+    border: 4px solid #333;
+}
+
+/* Scanlines y curva de pantalla de tubo retro */
+#game-wrapper::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%,
+            rgba(0, 0, 0, 0.2) 50%);
+    background-size: 100% 4px;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+#game-banner {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: #111;
+    color: #fff;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #333;
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+#game-score {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+#game-canvas {
+    transition: filter 0.3s ease;
+    z-index: 1;
+}
+
+/* Efecto de desenfoque al canvas usando clases de JavaScript */
+#game-canvas.blurred {
+    filter: blur(5px) brightness(0.5);
+}
+
+/* Estilos del Overlay */
+#game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    box-sizing: border-box;
+}
+
+#game-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#overlay-title {
+    color: #ffd700;
+    font-size: 1.8rem;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+#play-button {
+    background: #ffd700;
+    color: #000;
+    border: 4px solid #fff;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #b39700, 0 10px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.1s ease;
+    outline: none;
+}
+
+#play-button:hover {
+    background: #ffe34d;
+    box-shadow: 0 4px 0 #b39700, 0 8px 15px rgba(0, 0, 0, 0.4);
+    transform: translateY(2px);
+}
+
+#play-button:active {
+    box-shadow: 0 0px 0 #b39700, 0 4px 5px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+}

@@ -1,0 +1,19 @@
+[
+  "./img/sprites/BigCoin.png",
+  "./img/sprites/Coin.png",
+  "./img/sprites/PacMan.png",
+  "./img/sprites/blueGhost.png",
+  "./img/sprites/greenGhost.png",
+  "./img/sprites/orangeGhost.png",
+  "./img/sprites/redGhost.png",
+  "./img/sprites/yellowGhost.png",
+  "./game/bundle.js",
+  "./game/engine.js",
+  "./game/game.js",
+  "./game/main.js",
+  "./game/map.js",
+  "./game/entities/coin.js",
+  "./game/entities/entity.js",
+  "./game/entities/fantasma.js",
+  "./game/entities/pacman.js"
+]
