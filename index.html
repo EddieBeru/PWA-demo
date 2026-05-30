@@ -21,7 +21,10 @@
     <button class="btn-install" id="installBtn">Instalar en el dispositivo</button>
 
     <div class="container">
-        <h4>Juega PacMan incluso sin conexión a internet!</h4>
+
+        <div class="banner">
+            <span>Juega PacMan incluso sin conexión a internet!</span>
+        </div>
 
         <div id="game-wrapper">
             <div id="game-banner">
@@ -35,6 +38,15 @@
                 <h2 id="overlay-title">READY?</h2>
                 <button id="play-button">START</button>
             </div>
+        </div>
+
+        <!-- Virtual D-pad controls for mobile -->
+        <div id="dpad-container" class="mobile-only">
+            <div class="dpad-btn up" id="dpad-up">▲</div>
+            <div class="dpad-middle"></div>
+            <div class="dpad-btn left" id="dpad-left">◀</div>
+            <div class="dpad-btn right" id="dpad-right">▶</div>
+            <div class="dpad-btn down" id="dpad-down">▼</div>
         </div>
 
     </div>

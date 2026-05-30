@@ -1,4 +1,5 @@
 const CACHE_NAME = 'pwa-pacman-v1';
+const DYNAMIC_CACHE_NAME = 'pwa-dynamic-v1';
 const ASSETS = [
   './',
   './index.html',
@@ -38,7 +39,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
-          if (key !== CACHE_NAME) {
+          if (key !== CACHE_NAME && key !== DYNAMIC_CACHE_NAME) {
             console.log('[Service Worker] Removing old cache:', key);
             return caches.delete(key);
           }
@@ -49,15 +50,43 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Event: Cache-First strategy with Network Fallback
+
+// Fetch Event: Cache-First strategy with General Dynamic Caching
 self.addEventListener('fetch', (event) => {
+  // Only cache GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Only cache HTTP/HTTPS requests
+  const url = new URL(event.request.url);
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
+      // 1. If it's already in the cache, serve it
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request);
+
+      // 2. Otherwise, fetch it from the network and cache it dynamically
+      return fetch(event.request).then((networkResponse) => {
+        // Cache successful responses
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      }).catch((err) => {
+        console.error('[Service Worker] Fetch failed:', err);
+      });
     })
   );
 });
+
+
 

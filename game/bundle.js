@@ -1,6 +1,5 @@
-"use strict";
 (() => {
-  // public/game/entities/entity.js
+  // game/entities/entity.js
   var Entity = class {
     constructor(x, y, dir = { x: 0, y: 0 }) {
       this.x = x;
@@ -57,7 +56,7 @@
     }
   };
 
-  // public/game/entities/coin.js
+  // game/entities/coin.js
   var SPRITE_SIZE = 16;
   var Coin = class extends Entity {
     constructor(x, y, grande = false) {
@@ -88,7 +87,7 @@
     }
   };
 
-  // public/game/map.js
+  // game/map.js
   var spritesheet = new Image();
   spritesheet.src = "./img/sprites/Tileset.png";
   spritesheet.onerror = () => console.error("Spritesheet de tiles no se pudo cargar.");
@@ -269,7 +268,7 @@
     }
   };
 
-  // public/game/engine.js
+  // game/engine.js
   var lastTime = 0;
   var TICK_MS = 1e3 / 30;
   var accum = 0;
@@ -315,6 +314,76 @@
     );
   }
   var lastKey = null;
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var SWIPE_THRESHOLD = 30;
+  function handleTouchStart(e) {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+  }
+  function handleTouchEnd(e) {
+    if (e.changedTouches.length === 1) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      if (Math.max(absDx, absDy) > SWIPE_THRESHOLD) {
+        if (absDx > absDy) {
+          lastKey = dx > 0 ? "ArrowRight" : "ArrowLeft";
+        } else {
+          lastKey = dy > 0 ? "ArrowDown" : "ArrowUp";
+        }
+      }
+    }
+  }
+  function handleTouchMove(e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+  }
+  var canvasEl = document.getElementById("game-canvas");
+  if (canvasEl) {
+    canvasEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+    canvasEl.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvasEl.addEventListener("touchend", handleTouchEnd, { passive: true });
+  }
+  function setupDpad() {
+    const dpadUp = document.getElementById("dpad-up");
+    const dpadDown = document.getElementById("dpad-down");
+    const dpadLeft = document.getElementById("dpad-left");
+    const dpadRight = document.getElementById("dpad-right");
+    const setupBtn = (btn, key) => {
+      if (!btn) return;
+      const handlePress = (e) => {
+        lastKey = key;
+        btn.classList.add("active");
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      };
+      const handleRelease = () => {
+        btn.classList.remove("active");
+      };
+      btn.addEventListener("touchstart", handlePress, { passive: false });
+      btn.addEventListener("touchend", handleRelease, { passive: true });
+      btn.addEventListener("mousedown", handlePress);
+      btn.addEventListener("mouseup", handleRelease);
+      btn.addEventListener("mouseleave", handleRelease);
+    };
+    setupBtn(dpadUp, "ArrowUp");
+    setupBtn(dpadDown, "ArrowDown");
+    setupBtn(dpadLeft, "ArrowLeft");
+    setupBtn(dpadRight, "ArrowRight");
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupDpad);
+  } else {
+    setupDpad();
+  }
   document.addEventListener("keydown", (e) => {
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
       lastKey = e.key;
@@ -336,7 +405,7 @@
     }
   }
 
-  // public/game/entities/pacman.js
+  // game/entities/pacman.js
   var spritesheet2 = new Image();
   spritesheet2.src = "./img/sprites/PacMan.png";
   spritesheet2.onerror = () => console.error("Spritesheet de pacman no se pudo cargar.");
@@ -438,7 +507,7 @@
     }
   };
 
-  // public/game/entities/fantasma.js
+  // game/entities/fantasma.js
   var SPRITE_SIZE3 = 16;
   var Fantasma = class extends Entity {
     constructor(x, y, color) {
@@ -767,7 +836,7 @@
     }
   };
 
-  // public/game/game.js
+  // game/game.js
   var canvas = document.getElementById("game-canvas");
   var scoreEl = document.getElementById("game-score");
   var Game = class {
@@ -893,7 +962,7 @@
     }
   };
 
-  // public/game/main.js
+  // game/main.js
   var canvas2 = document.getElementById("game-canvas");
   var ctx = canvas2.getContext("2d");
   ctx.imageSmoothingEnabled = false;
