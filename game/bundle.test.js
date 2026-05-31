@@ -314,9 +314,6 @@
     );
   }
   var lastKey = null;
-  function resetInput() {
-    lastKey = null;
-  }
   var touchStartX = 0;
   var touchStartY = 0;
   var SWIPE_THRESHOLD = 30;
@@ -421,12 +418,6 @@
       this.deathTick = 0;
       this.isDead = false;
       this.powerupTimer = 0;
-      this.facingHorizontal = 1;
-      this.isFlipping = false;
-      this.flipStartScale = 1;
-      this.flipTargetScale = 1;
-      this.flipStart = 0;
-      this.flipDuration = 180;
     }
     update(map, fantasmas = []) {
       if (this.isDying || this.isDead) return;
@@ -446,13 +437,6 @@
       }
       const duration = this.powerupTimer > 0 ? 300 : 500;
       if (map.isWalkable(this.x + this.lastInputDir.x, this.y + this.lastInputDir.y)) {
-        if (this.lastInputDir.x !== 0 && this.lastInputDir.x !== this.facingHorizontal) {
-          this.isFlipping = true;
-          this.flipStartScale = this.facingHorizontal;
-          this.flipTargetScale = this.lastInputDir.x;
-          this.flipStart = performance.now();
-          this.facingHorizontal = this.lastInputDir.x;
-        }
         this.dir = this.lastInputDir;
         this.startSlide(this.x + this.lastInputDir.x, this.y + this.lastInputDir.y, duration);
       }
@@ -473,62 +457,17 @@
       this.updateSlide();
       const currentFrame = Math.floor(ACTUAL_TICK / 2) % 8;
       if (!spritesheet2.complete) return;
-      const cx = this.rx * TILE + TILE / 2;
-      const cy = this.ry * TILE + TILE / 2;
-      ctx.save();
-      ctx.translate(cx, cy);
-      let scaleX = this.facingHorizontal;
-      if (this.isFlipping) {
-        const elapsed = performance.now() - this.flipStart;
-        const t = Math.min(1, elapsed / this.flipDuration);
-        const angle = t * Math.PI;
-        scaleX = this.flipStartScale * Math.cos(angle);
-        if (t >= 1) {
-          this.isFlipping = false;
-          this.facingHorizontal = this.flipTargetScale;
-          scaleX = this.flipTargetScale;
-        }
-      }
-      ctx.scale(scaleX, 1);
       ctx.drawImage(
         spritesheet2,
         currentFrame * SPRITE_SIZE2,
         0,
         SPRITE_SIZE2,
         SPRITE_SIZE2,
-        -TILE / 2,
-        -TILE / 2,
+        this.rx * TILE,
+        this.ry * TILE,
         TILE,
         TILE
       );
-      ctx.restore();
-      const inputDir = getInputDir();
-      if (inputDir) {
-        const arrowOffset = TILE * 0.95;
-        const ax = cx + inputDir.x * arrowOffset;
-        const ay = cy + inputDir.y * arrowOffset;
-        ctx.save();
-        ctx.translate(ax, ay);
-        let angle = 0;
-        if (inputDir.x === 1) angle = 0;
-        else if (inputDir.y === 1) angle = Math.PI / 2;
-        else if (inputDir.x === -1) angle = Math.PI;
-        else if (inputDir.y === -1) angle = 3 * Math.PI / 2;
-        ctx.rotate(angle);
-        const pulse = 5 + Math.sin(ACTUAL_TICK / 3.5) * 2.5;
-        ctx.shadowBlur = pulse;
-        ctx.shadowColor = "#00ffaa";
-        ctx.strokeStyle = "#00ffaa";
-        ctx.lineWidth = 2.5;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.beginPath();
-        ctx.moveTo(-4, -3);
-        ctx.lineTo(2, 0);
-        ctx.lineTo(-4, 3);
-        ctx.stroke();
-        ctx.restore();
-      }
     }
     morir() {
       if (this.isDying) return;
@@ -916,7 +855,6 @@
       const playButton = document.getElementById("play-button");
       if (playButton) {
         playButton.addEventListener("click", () => {
-          resetInput();
           if (this.pacman.isDead || this.isWon) {
             this.reset();
             this.isStarted = true;
@@ -933,7 +871,6 @@
       }
     }
     reset() {
-      resetInput();
       this.map = new Map();
       this.pacman = new Pacman(13, 20);
       this.fantasmas = [

@@ -69,6 +69,11 @@ export function drawSprite(img, sx, sy, sw, sh, col, row) {
 
 let lastKey = null;
 
+export function resetInput() {
+    lastKey = null;
+}
+
+
 // --- Touch Swipe Controls ---
 let touchStartX = 0;
 let touchStartY = 0;

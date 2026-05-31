@@ -16,6 +16,14 @@ export class Pacman extends Entity {
         this.deathTick = 0;   // tick en que empezó la muerte
         this.isDead = false;   // true cuando la animación terminó
         this.powerupTimer = 0; // Temporizador del pellet grande
+
+        // Flipping states for smooth horizontal turning animation
+        this.facingHorizontal = 1; // 1 = Right, -1 = Left
+        this.isFlipping = false;
+        this.flipStartScale = 1;
+        this.flipTargetScale = 1;
+        this.flipStart = 0;
+        this.flipDuration = 180; // milliseconds
     }
 
     update(map, fantasmas = []) {
@@ -46,6 +54,14 @@ export class Pacman extends Entity {
         const duration = this.powerupTimer > 0 ? 300 : 500;
 
         if (map.isWalkable(this.x + this.lastInputDir.x, this.y + this.lastInputDir.y)) {
+            // Trigger smooth horizontal flip animation if horizontal direction axis changes
+            if (this.lastInputDir.x !== 0 && this.lastInputDir.x !== this.facingHorizontal) {
+                this.isFlipping = true;
+                this.flipStartScale = this.facingHorizontal;
+                this.flipTargetScale = this.lastInputDir.x;
+                this.flipStart = performance.now();
+                this.facingHorizontal = this.lastInputDir.x;
+            }
             this.dir = this.lastInputDir;
             this.startSlide(this.x + this.lastInputDir.x, this.y + this.lastInputDir.y, duration);
         }
@@ -72,11 +88,77 @@ export class Pacman extends Entity {
 
         if (!spritesheet.complete) return;
 
+        // --- DRAW PACMAN WITH FLIPPING ANIMATION ---
+        const cx = this.rx * TILE + TILE / 2;
+        const cy = this.ry * TILE + TILE / 2;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        // Interpolate scaleX if currently in a flipping transition
+        let scaleX = this.facingHorizontal;
+        if (this.isFlipping) {
+            const elapsed = performance.now() - this.flipStart;
+            const t = Math.min(1, elapsed / this.flipDuration);
+            const angle = t * Math.PI;
+            scaleX = this.flipStartScale * Math.cos(angle);
+            
+            if (t >= 1) {
+                this.isFlipping = false;
+                this.facingHorizontal = this.flipTargetScale;
+                scaleX = this.flipTargetScale;
+            }
+        }
+        ctx.scale(scaleX, 1);
+
         ctx.drawImage(
             spritesheet,
             currentFrame * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE,
-            this.rx * TILE, this.ry * TILE, TILE, TILE);
+            -TILE / 2, -TILE / 2, TILE, TILE
+        );
+        ctx.restore();
+
+        // --- DRAW NEXT MOVE ARROW INDICATOR ---
+        const inputDir = getInputDir();
+        if (inputDir) {
+            // Draw a beautiful tiny glowing arrow offset in front of Pacman
+            const arrowOffset = TILE * 0.95;
+            const ax = cx + inputDir.x * arrowOffset;
+            const ay = cy + inputDir.y * arrowOffset;
+
+            ctx.save();
+            ctx.translate(ax, ay);
+
+            // Determine rotation angle based on requested input direction
+            let angle = 0;
+            if (inputDir.x === 1) angle = 0;
+            else if (inputDir.y === 1) angle = Math.PI / 2;
+            else if (inputDir.x === -1) angle = Math.PI;
+            else if (inputDir.y === -1) angle = 3 * Math.PI / 2;
+
+            ctx.rotate(angle);
+
+            // Add organic pulsing glow effect using the current game ticks
+            const pulse = 5 + Math.sin(ACTUAL_TICK / 3.5) * 2.5;
+
+            ctx.shadowBlur = pulse;
+            ctx.shadowColor = "#00ffaa"; // Beautiful neon green
+            ctx.strokeStyle = "#00ffaa";
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+
+            // Tiny chevron pointing right (0 rad)
+            ctx.beginPath();
+            ctx.moveTo(-4, -3);
+            ctx.lineTo(2, 0);
+            ctx.lineTo(-4, 3);
+            ctx.stroke();
+
+            ctx.restore();
+        }
     }
+
 
     morir() {
         if (this.isDying) return; // evitar llamadas múltiples

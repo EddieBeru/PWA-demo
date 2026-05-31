@@ -1,7 +1,7 @@
 import { Pacman } from "./entities/pacman.js";
 import { Fantasma } from "./entities/fantasma.js";
 import { Map, coins } from "./map.js";
-import { clearCanvas, getPlayerPoints, resetPoints } from "./engine.js";
+import { clearCanvas, getPlayerPoints, resetPoints, resetInput } from "./engine.js";
 import { addTick } from "./main.js";
 
 const canvas = document.getElementById("game-canvas");
@@ -27,6 +27,7 @@ export class Game {
     const playButton = document.getElementById("play-button");
     if (playButton) {
       playButton.addEventListener("click", () => {
+        resetInput();
         if (this.pacman.isDead || this.isWon) {
           // Si estaba muerto o ganó, resetear y empezar
           this.reset();
@@ -46,6 +47,7 @@ export class Game {
   }
 
   reset() {
+    resetInput();
     this.map = new Map();
     this.pacman = new Pacman(13, 20);
     this.fantasmas = [
