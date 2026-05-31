@@ -1,5 +1,5 @@
-const CACHE_NAME = 'pwa-pacman-v1';
-const DYNAMIC_CACHE_NAME = 'pwa-dynamic-v1';
+const CACHE_NAME = 'pwa-pacman-v2';
+const DYNAMIC_CACHE_NAME = 'pwa-dynamic-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,12 @@ const ASSETS = [
   './app.js',
   './manifest.json',
   './icon.svg',
+  './favicon.ico',
+  './apple-touch-icon.png',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-192-maskable.png',
+  './icon-512-maskable.png',
   './game/bundle.js',
   './assets.json'
 ];
