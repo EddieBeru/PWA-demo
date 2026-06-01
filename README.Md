@@ -17,4 +17,4 @@ La página fue hecha con HTML, CSS y JS puro (no frameworks), así, no se requie
 La implementación de PWA, configuración de Manifest y estándares en la industria para íconos.
 
 ## Créditos / Assets
-- Icono de PacMan por [UXWing](https://uxwing.com/pacman-icon/) — libre para uso personal y comercial
+- Icono de PacMan por [UXWing](https://uxwing.com/pacman-icon/), libre para uso personal y comercial
