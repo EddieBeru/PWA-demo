@@ -7,7 +7,6 @@
   "./img/sprites/orangeGhost.png",
   "./img/sprites/redGhost.png",
   "./img/sprites/yellowGhost.png",
-  "./game/bundle.js",
   "./game/engine.js",
   "./game/game.js",
   "./game/main.js",
