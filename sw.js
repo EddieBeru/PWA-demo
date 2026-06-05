@@ -79,7 +79,7 @@ self.addEventListener('fetch', (event) => {
 
       // 2. Si no está en caché, hacer fetch y cachear dinámicamente
       return fetch(event.request).then((networkResponse) => {
-        // Cache successful responses
+        // Cache responde con éxito
         if (networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(DYNAMIC_CACHE_NAME).then((cache) => {

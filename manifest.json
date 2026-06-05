@@ -1,6 +1,6 @@
 {
-  "short_name": "PacMan PWA",
-  "name": "PacMan PWA",
+  "name": "Pacman PWA",
+  "short_name": "Pacman PWA",
   "icons": [
     {
       "src": "favicon.ico",
