@@ -42,5 +42,5 @@
   "background_color": "#03030c",
   "theme_color": "#03030c",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "any"
 }
